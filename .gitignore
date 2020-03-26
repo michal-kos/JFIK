@@ -1,0 +1,4 @@
+.idea
+node_modules
+grammar/out_java/*
+!grammar/out_java/.gitkeep

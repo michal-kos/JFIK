@@ -1,0 +1,24 @@
+let a = 5
+a = 13
+let b = 3
+let c = a * b \ 3.14 - a() + 19
+print(c)
+
+const PI = 3.14159
+const NEG_PI = -3.1415
+
+$PI = "try to overwrite"
+
+$ some comment here
+$ some more comments
+
+$let teraz_patrz = "o matko"
+
+func a {
+    let u = 12
+    const bc = -35.7
+}
+a = "trochę zmiana planów"
+asd = 3 + 0.14 - a() * 5 * 45 $comment that out
+let uszy = a() * -3.14
+print("some debug", a, NEG_PI)
