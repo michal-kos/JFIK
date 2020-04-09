@@ -495,30 +495,6 @@ expression
     | <assoc=right> expression
       bop=('=' | '+=' | '-=' | '*=' | '/=' | '&=' | '|=' | '^=' | '>>=' | '>>>=' | '<<=' | '%=')
       expression
-    | lambdaExpression // Java8
-
-    // Java 8 methodReference
-    | expression '::' typeArguments? IDENTIFIER
-    | typeType '::' (typeArguments? IDENTIFIER | NEW)
-    | classType '::' typeArguments? NEW
-    ;
-
-// Java8
-lambdaExpression
-    : lambdaParameters '->' lambdaBody
-    ;
-
-// Java8
-lambdaParameters
-    : IDENTIFIER
-    | '(' formalParameterList? ')'
-    | '(' IDENTIFIER (',' IDENTIFIER)* ')'
-    ;
-
-// Java8
-lambdaBody
-    : expression
-    | block
     ;
 
 primary
