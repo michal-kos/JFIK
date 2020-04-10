@@ -14,7 +14,7 @@
 ## Użycie translatora
 
 ## Technologie wykorzystane do stworzenia projektu
-Generator parserów jaki wybraliśmy do zaimplementowania translatora jest narzędzie o nazwie [ANTLR w wersji 4](https://github.com/antlr/antlr4) oraz specjalnie pod nie przygotowaną [gramatykę](https://github.com/antlr/grammars-v4) języka Java. 
+Generatorem parserów jaki wybraliśmy do zaimplementowania translatora języka Java do C# jest narzędzie o nazwie [ANTLR w wersji 4](https://github.com/antlr/antlr4) wraz ze specjalnie przygotowaną [gramatykę](https://github.com/antlr/grammars-v4) języka Java. 
 Na ten moment do napisania translatora zamierzamy wykorzystać język JavaScript.
 
 ## Opis systemu typizacji dla języka Java
@@ -38,7 +38,7 @@ Kod źródłowy w języku C# jest kompilowany do *intermediate language*, który
 Kryteria jakimi był podyktowany wybór narzędzia ANTLRv4: 
 1. Generator zawiera obszerny zbiór oficjalnych dokumentacji, przykładów oraz gotowych źródeł znacznie ułatwiających pracę z narzędziem.
 2. ANTLRv4 napisany jest w języku Java. Przy wyborze narzędzia rozważaliśmy także wybór generatora napisanego w języku Python ale ostatecznie zdecydowaliśmy się na ANTLRv4 z powodu znajomości Javy przez obu członków zespołu.
-3. Kolejnym argumentem wyboru tego generatora jest możliwość integracji z językiem JavaScript przez plugin npm. Przez projekty w poprzednich latach mamy z tym językiem duże doświadczenie.
+3. Kolejnym argumentem wyboru tego generatora jest możliwość integracji z językiem JavaScript przez plugin npm. Przez projekty realizowane w poprzednich semestrach mamy z tym językiem większe doświadczenie.
 
 ## Napotkane problemy oraz sposób ich rozwiązania
 
