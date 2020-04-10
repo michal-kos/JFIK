@@ -5,6 +5,7 @@
 - [Sposób użycia translatora](#użycie-translatora)
 - [Technologie wykorzystane do stworzenia projektu](#technologie-wykorzystane-do-stworzenia-projektu)
 - [Opis systemu typizacji dla języka Java](#opis-systemu-typizacji-dla-jezyka-java)
+- [Podstawowe cechy języka C#](#podstawowe-cechy-języka-C#)
 - [Uzasadnienie wyboru generatora parserów ANTLRv4](#uzasadnienie-wyboru-generatora-parserow-antlrv4)
 - [Napotkane problemy oraz sposób ich rozwiązania](#napotkane-problemy-oraz-sposob-ich-rozwizania)
 - [Specyfikacja gramatyki języka Java w notacji narzędzia ANTLRv4](#specyfikacja-gramatyki-jezyka-java-w-notacji-narzedzia-antlrv4)
