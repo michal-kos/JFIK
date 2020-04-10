@@ -29,6 +29,10 @@ Dodatkowo, cechą języka Java jest **typowanie statyczne** - każda nazwa zmien
 3. Silne typowanie
 4. Kompilacja kodu źródłowego do kodu bajtowego (*bytecode*), który następnie jest kownertowany do natywnego kodu maszynowego przez maszynę wirtualną (*Java Virtual Machine*)
 
+## Podstawowe cechy języka C#
+Język C# posiada wiele cech wspólnych z Javą - przede wszystkim obiektowość i oparcie hierarchii dziedziczenia opartej na klasie *object*. Tak samo jak Java, C# jest językiem silnie typowanym oraz charakteryzuje się statycznym typowaniem, chociaż wspiera elementy typowania dynamicznego (słowo kluczowe *dynamic*).
+Kod źródłowy w języku C# jest kompilowany do *intermediate language*, który następnie jest konwertowany do kodu maszynowego.
+
 ## Uzasadnienie wyboru generatora parserów ANTLRv4
 Kryteria jakimi był podyktowany wybór narzędzia ANTLRv4: 
 1. Generator zawiera obszerny zbiór oficjalnych dokumentacji, przykładów oraz gotowych źródeł znacznie ułatwiających pracę z narzędziem.
