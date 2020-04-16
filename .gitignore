@@ -1,2 +1,6 @@
 .idea
 node_modules
+
+/grammar/out_java
+/grammar/.antlr
+/src/parser
