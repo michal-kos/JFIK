@@ -11,11 +11,10 @@ gui:
 	cd ${out_java_path} && $(javac) Java*.java
 	cd ${out_java_path} && $(grun) Java compilationUnit ../../examples/HelloWorld.java -gui
 
-node:
-	cd grammar/ && $(antlr) -Dlanguage=JavaScript -visitor -o ../src/parser Cash.g4
-	node src/cash.js examples/now.cash
+node: generate
+	node src/app.js examples/HelloWorld.java
 
 generate: 
 	antlr4 -Dlanguage=JavaScript grammar/JavaLexer.g4
 	antlr4 -Dlanguage=JavaScript grammar/JavaParser.g4
-	mv grammar/*.interp grammar/*.tokens mv grammar/*.js ./src/parser
+	mv grammar/*.interp grammar/*.tokens grammar/*.js ./src/parser
