@@ -34,8 +34,10 @@ var listener = new JavaLangListener(code);
 var tree = parser.compilationUnit();
 
 antlr.tree.ParseTreeWalker.DEFAULT.walk(listener, tree);
-// var result = listener.getResult();
-
+var result = listener.buildResult();
+console.log(code)
+console.log("\n\n")
+console.log(result)
 // var outputFileName = file + ".cs"
 // fs.writeFile(outputFileName, result, function (err) {
 //     if (err) throw err;
