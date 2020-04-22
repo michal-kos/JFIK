@@ -14,32 +14,129 @@ JavaLangListener.prototype = Object.create(JavaParserListener.prototype)
 JavaLangListener.prototype.constructor = JavaLangListener;
 
 JavaLangListener.prototype.enterCompilationUnit = function(ctx) {
-    console.log(ctx)    
     // var className = ctx.      
     // append("class " + ctx)
 };
 
 JavaLangListener.prototype.exitCompilationUnit = function(ctx) {          
-   appendIfNotNull("\n}\n")
+   
 };
 
+// CLASS 
+
 JavaLangListener.prototype.enterClassDeclaration = function(ctx) {
-    // ctx.children.filter(function(element) { return element instanceof JavaParser.TerminalNodeImpl })
-    //             .forEach(function(element) { element.getText() })
+    appendIfNotNull(ctx.CLASS() + " " + ctx.IDENTIFIER() + " ")
 };
+
+JavaLangListener.prototype.enterClassBody = function(ctx) {
+    append("{\n")
+};
+
+JavaLangListener.prototype.exitClassBody = function(ctx) {
+    append("\n}\n")
+}
+
+JavaLangListener.prototype.enterClassBodyDeclaration = function(ctx) {
+    append("    ")
+}
+
+JavaLangListener.prototype.exitClassBodyDeclaration = function(ctx) {
+    append("\n")
+}
+
+// Method 
+
+JavaLangListener.prototype.enterMethodDeclaration = function(ctx) {
+    append(ctx.IDENTIFIER() + " ")
+}
+
+JavaLangListener.prototype.enterVariableDeclaratorId = function(ctx) {
+    append(ctx.IDENTIFIER())
+    if(ctx.LBRACK() != null && ctx.RBRACK() != null) {
+        append("[]")
+    }
+}
+
+// TYPE
+
+JavaLangListener.prototype.enterTypeTypeOrVoid = function(ctx) {
+    if(ctx.typeType() == null) {
+        append(ctx.VOID() + " ")
+    } else {
+
+    }
+}
+
+JavaLangListener.prototype.enterTypeType = function(ctx) {
+    if(ctx.LBRACK() != null && ctx.RBRACK() != null) {
+        append("[] ")
+    }
+    methods(ctx)
+}
+
+JavaLangListener.prototype.enterClassOrInterfaceType = function(ctx) {
+    appendIfNotNull(ctx.getText())
+}
+
+// JavaLangListener.prototype.enterMethodBody = function(ctx) {
+//     append(" {\n")
+// }
+
+JavaLangListener.prototype.enterBlock = function(ctx) {
+    append("{\n")
+}
+
+JavaLangListener.prototype.exitBlock = function(ctx) {
+    append("\n}\n")
+}
+
+
+// MODIFIERS
 
 JavaParserListener.prototype.enterClassOrInterfaceModifier = function(ctx) {
     // if (ctx.children[0] instanceof antlr4.TerminalNode) {
     //     appendIfNotNull(ctx.getText())
     // }
+    if(ctx.annotation() == null) {
+        appendIfNotNull(ctx.getText() + " ")
+    }
+
+    // methods(ctx)
 };
 
 JavaLangListener.prototype.enterModifier = function(ctx) {
-    appendIfNotNull(ctx.getText())
+    if (ctx.classOrInterfaceModifier() == null) {
+        appendIfNotNull(ctx.getText() + " ")
+    }
 };
 
+
+// MEMBER
+
+JavaLangListener.prototype.enterMemberDeclaration = function(ctx) {
+    // append("    ")
+};
+
+// Parameters
+
+JavaLangListener.prototype.enterFormalParameters = function(ctx) {
+    append("(")
+}
+
+JavaLangListener.prototype.exitFormalParameters = function(ctx) {
+    append(") ")
+}
+
+JavaLangListener.prototype.enterFormalParameterList = function(ctx) {
+    // append("(")
+}
+
+JavaLangListener.prototype.enterFormalParameterList = function(ctx) {
+    // append("(")
+}
+
 JavaLangListener.prototype.buildResult = function() {
-    var result = strings.join(" ");
+    var result = strings.join("");
     // if (packageName != "") {
     //     result = "package ${packageName}; \n\n" + result
     // // }
@@ -52,6 +149,24 @@ JavaLangListener.prototype.buildResult = function() {
 
 function appendIfNotNull(value) {
     if (value != null) strings.push(value)
+}
+
+function append(value) {
+    strings.push(value)
+}
+
+function methods(ctx) {
+    var result = [];
+    for (var id in ctx) {
+      try {
+        if (typeof(ctx[id]) == "function") {
+          result.push(id + ": " + ctx[id].toString());
+        }
+      } catch (err) {
+        result.push(id + ": inaccessible");
+      }
+    }
+
 }
 
 exports.JavaLangListener = JavaLangListener;
