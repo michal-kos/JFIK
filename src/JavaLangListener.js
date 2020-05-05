@@ -26,6 +26,14 @@ JavaLangListener.prototype.exitCompilationUnit = function(ctx) {
 
 JavaLangListener.prototype.enterClassDeclaration = function(ctx) {
     appendIfNotNull(ctx.CLASS() + " " + ctx.IDENTIFIER() + " ")
+    if (ctx.EXTENDS() != null) {
+        appendIfNotNull(ctx.EXTENDS() + " ")
+    }
+
+    if (ctx.IMPLEMENTS() != null) {
+        appendIfNotNull(ctx.IMPLEMENTS() + " ")
+    }
+    methods(ctx)
 };
 
 JavaLangListener.prototype.enterClassBody = function(ctx) {
@@ -50,32 +58,39 @@ JavaLangListener.prototype.enterMethodDeclaration = function(ctx) {
     append(ctx.IDENTIFIER() + " ")
 }
 
+// VARIABLE
+
 JavaLangListener.prototype.enterVariableDeclaratorId = function(ctx) {
     append(ctx.IDENTIFIER())
-    if(ctx.LBRACK() != null && ctx.RBRACK() != null) {
+    if(!isArrayEmpty(ctx.LBRACK()) && !isArrayEmpty(ctx.RBRACK())) {
         append("[]")
     }
 }
 
 // TYPE
 
+JavaLangListener.prototype.enterTypeList = function(ctx) {
+   
+}
+
+JavaLangListener.prototype.exitTypeList = function(ctx) {
+   
+}
+
 JavaLangListener.prototype.enterTypeTypeOrVoid = function(ctx) {
     if(ctx.typeType() == null) {
-        append(ctx.VOID() + " ")
-    } else {
-
+        append(ctx.VOID().getText() + " ")
     }
 }
 
 JavaLangListener.prototype.enterTypeType = function(ctx) {
-    if(ctx.LBRACK() != null && ctx.RBRACK() != null) {
+    if(!isArrayEmpty(ctx.LBRACK()) && !isArrayEmpty(ctx.RBRACK())) {
         append("[] ")
     }
-    methods(ctx)
 }
 
 JavaLangListener.prototype.enterClassOrInterfaceType = function(ctx) {
-    appendIfNotNull(ctx.getText())
+    appendIfNotNull(ctx.getText() + " ")
 }
 
 // JavaLangListener.prototype.enterMethodBody = function(ctx) {
@@ -135,6 +150,13 @@ JavaLangListener.prototype.enterFormalParameterList = function(ctx) {
     // append("(")
 }
 
+// Expression
+
+JavaLangListener.prototype.enterExpression = function(ctx) {
+    // append("(")
+    methods(ctx)
+}
+
 JavaLangListener.prototype.buildResult = function() {
     var result = strings.join("");
     // if (packageName != "") {
@@ -167,6 +189,14 @@ function methods(ctx) {
       }
     }
 
+}
+
+function isArrayEmpty(array) {
+    if (!Array.isArray(array) || !array.length) {
+       return true
+    }
+    
+    return false
 }
 
 exports.JavaLangListener = JavaLangListener;

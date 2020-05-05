@@ -2,10 +2,7 @@ const antlr = require('antlr4')
 const JavaLexer = require('./parser/JavaLexer').JavaLexer
 const JavaParser = require('./parser/JavaParser').JavaParser
 const JavaLangListener = require('./JavaLangListener').JavaLangListener
-const JavaParserListener = require('./parser/JavaParserListener').JavaParserListener
-
-// const CashVisitor = require('./parser/CashVisitor').CashVisitor
-
+const JavaLangVisitor = require('./JavaLangVisitor')
 
 const fs = require('fs')
 
@@ -30,14 +27,13 @@ let tokens = new antlr.CommonTokenStream(lexer);
 let parser = new JavaParser(tokens);
 parser.buildParseTrees = true;
 
-var listener = new JavaLangListener(code);
 var tree = parser.compilationUnit();
 
-antlr.tree.ParseTreeWalker.DEFAULT.walk(listener, tree);
-var result = listener.buildResult();
+const output = new JavaLangVisitor().start(tree);
+
 console.log(code)
 console.log("\n\n")
-console.log(result)
+console.log(output)
 // var outputFileName = file + ".cs"
 // fs.writeFile(outputFileName, result, function (err) {
 //     if (err) throw err;
