@@ -34,8 +34,9 @@ const output = new JavaLangVisitor().start(tree);
 console.log(code)
 console.log("\n\n")
 console.log(output)
-// var outputFileName = file + ".cs"
-// fs.writeFile(outputFileName, result, function (err) {
-//     if (err) throw err;
-//     console.log('File is created successfully.');
-// });  
+
+var outputFileName = "output" + ".cs"
+fs.writeFile(outputFileName, output, function (err) {
+    if (err) throw err;
+    console.log('File is created successfully.');
+});  
