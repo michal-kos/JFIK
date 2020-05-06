@@ -79,13 +79,18 @@ class Visitor extends JavaParserVisitor {
 
     visitMethodDeclaration(ctx) {
         let code = '';
-        code += this.visit(ctx.getChild(0))
 
         const methodName = ctx.IDENTIFIER().getText()
         const methodNameCapitalized = methodName.charAt(0).toUpperCase() + methodName.slice(1)
-        code += ' ' + methodNameCapitalized
+        ctx.IDENTIFIER().symbol.text = methodNameCapitalized
 
-        for (let i = 2; i < ctx.getChildCount(); i++) {
+        for (let i = 0; i < ctx.getChildCount(); i++) {
+            let child = ctx.getChild(i)
+
+            if (child === ctx.THROWS() || child === ctx.qualifiedNameList()) {
+                continue
+            }
+            
             code += this.visit(ctx.getChild(i));
         }
 
@@ -107,7 +112,7 @@ class Visitor extends JavaParserVisitor {
         javaToCSharpVocabulary[JavaLexer.DOUBLE] = 'double'
         javaToCSharpVocabulary[JavaLexer.EOF] = '';
         javaToCSharpVocabulary[JavaLexer.ABSTRACT] = 'abstract';
-        javaToCSharpVocabulary[JavaLexer.ASSERT] = '2';
+        javaToCSharpVocabulary[JavaLexer.ASSERT] = 'assert';
         javaToCSharpVocabulary[JavaLexer.BREAK] = 'break';
         javaToCSharpVocabulary[JavaLexer.CASE] = 'case';
         javaToCSharpVocabulary[JavaLexer.CATCH] = 'catch';
@@ -119,11 +124,11 @@ class Visitor extends JavaParserVisitor {
         javaToCSharpVocabulary[JavaLexer.ELSE] = 'else';
         javaToCSharpVocabulary[JavaLexer.ENUM] = 'enum';
         javaToCSharpVocabulary[JavaLexer.EXTENDS] = ':'; // <----
-        javaToCSharpVocabulary[JavaLexer.FINALLY] = 'finnaly';
+        javaToCSharpVocabulary[JavaLexer.FINALLY] = 'finally';
         javaToCSharpVocabulary[JavaLexer.FOR] = 'for';
         javaToCSharpVocabulary[JavaLexer.IF] = 'if';
         javaToCSharpVocabulary[JavaLexer.INSTANCEOF] = 'instanceof';
-        javaToCSharpVocabulary[JavaLexer.INT] = 'int';
+        javaToCSharpVocabulary[JavaLexer.IMPORT] = 'using';
         javaToCSharpVocabulary[JavaLexer.INTERFACE] = 'interface';
         javaToCSharpVocabulary[JavaLexer.LONG] = 'long';
         javaToCSharpVocabulary[JavaLexer.NATIVE] = 'native';
