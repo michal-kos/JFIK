@@ -29,7 +29,8 @@ parser.buildParseTrees = true;
 
 var tree = parser.compilationUnit();
 
-const output = new JavaLangVisitor().start(tree);
+var output = 'using System;\n'
+output += new JavaLangVisitor().start(tree, tokens);
 
 console.log(code)
 console.log("\n\n")

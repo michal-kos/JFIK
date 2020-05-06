@@ -1,5 +1,9 @@
-public class HelloWorld extends DERP implements Abc, CDE {
+public class HelloWorld {
+   static final int K = 100;
+
    public static void main(String[] args) { 
-      final long creditCardNumber = 1234_5678_9012_3456L;
-    }
+      if ((x > 8) && (y > 8)) {
+         
+      }
+   }
 }

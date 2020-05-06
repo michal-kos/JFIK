@@ -1,11 +1,10 @@
-
 using System;
+public class HelloWorld {
+   static readonly int K = 100;
 
-public class HelloWorld
-{
-    public static void Main(String[] args)
-    {
-        long creditCardNumber = 1234;
-        Console.WriteLine("Hello World!");
-    }
+   public static void Main(String[] args) { 
+    //   if ((x > decimal_literal) && (y > decimal_literal)) {
+         
+    //   }
+   }
 }
