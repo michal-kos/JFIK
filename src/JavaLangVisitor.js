@@ -30,6 +30,10 @@ class Visitor extends JavaParserVisitor {
             text = ctx.getText();
         } else {
             text = this.translateFromJavaToCSharp(ctx);
+
+            if (text == null) {
+                text = ctx.getText();
+            }
         }
 
         text = this.appendHiddenTokensToLeftOf(ctx) + text;
@@ -96,6 +100,54 @@ class Visitor extends JavaParserVisitor {
 
         return code
     }
+    
+    // TODO: 
+    // -visitEnhancedForControl(ctx){} for (char ch : strChars)
+    // -visitCatchClause(ctx){} catch (IOException | IllegalArgumentException ex) 
+    // -visitstatment -> try with resources
+    // -visitstatment -> assert assert n != 0;
+    // -inner class constructor
+    /*
+    static void Inner_class_constructor() {
+        // https://docs.oracle.com/javase/specs/jls/se9/html/jls-15.html#jls-15.9
+        Foo foo = new Foo();
+        Foo.Bar fooBar1 = foo.new Bar();
+        Foo.Bar fooBar2 = new Foo().new Bar();
+    }
+    */
+    // -local class 
+    /*
+    // Local class
+    class Foo {
+        void Bar() {
+            @WeakOuter
+            class Foobar {// Local class within a method
+            }
+        }
+    }
+    */
+    // - initialization
+    /*
+    class Foo {
+        static {
+            // Initialization
+        }
+    }
+
+    class Foo {
+        {
+            // Initialization
+        }
+    }
+    */
+    // System.out.println(Foo.class.getName() + ": constructor runtime");
+    // -int...
+    // -@Override
+    // -abstract class
+    // -enum
+    // -local interface
+    // annotations
+    // generic classes, methods, constructors
 
     // TODO - TRANSLATION separate file
     createTranslatorDictionary() {
@@ -152,16 +204,7 @@ class Visitor extends JavaParserVisitor {
         javaToCSharpVocabulary[JavaLexer.VOID] = 'void';
         javaToCSharpVocabulary[JavaLexer.VOLATILE] = 'volatile';
         javaToCSharpVocabulary[JavaLexer.WHILE] = 'while';
-        javaToCSharpVocabulary[JavaLexer.DECIMAL_LITERAL] = 'decimal_literal';
-        javaToCSharpVocabulary[JavaLexer.HEX_LITERAL] = 'hex_literal';
-        javaToCSharpVocabulary[JavaLexer.OCT_LITERAL] = 'oct_literal';
-        javaToCSharpVocabulary[JavaLexer.BINARY_LITERAL] = 'binary_literal';
-        javaToCSharpVocabulary[JavaLexer.FLOAT_LITERAL] = 'float_literal';
-        javaToCSharpVocabulary[JavaLexer.HEX_FLOAT_LITERAL] = 'hex_float_literal';
-        javaToCSharpVocabulary[JavaLexer.BOOL_LITERAL] = 'bool_literal';
-        javaToCSharpVocabulary[JavaLexer.CHAR_LITERAL] = 'char_literal';
-        javaToCSharpVocabulary[JavaLexer.STRING_LITERAL] = 'string_literal';
-        javaToCSharpVocabulary[JavaLexer.NULL_LITERAL] = 'null_literal';
+        javaToCSharpVocabulary[JavaLexer.NULL_LITERAL] = 'null';
         javaToCSharpVocabulary[JavaLexer.LPAREN] = '(';
         javaToCSharpVocabulary[JavaLexer.RPAREN] = ')';
         javaToCSharpVocabulary[JavaLexer.LBRACE] = '{';
@@ -177,7 +220,7 @@ class Visitor extends JavaParserVisitor {
         javaToCSharpVocabulary[JavaLexer.BANG] = '!';
         javaToCSharpVocabulary[JavaLexer.TILDE] = '~';
         javaToCSharpVocabulary[JavaLexer.QUESTION] = '?';
-        javaToCSharpVocabulary[JavaLexer.COLON] = ';';
+        javaToCSharpVocabulary[JavaLexer.COLON] = ':';
         javaToCSharpVocabulary[JavaLexer.EQUAL] = '==';
         javaToCSharpVocabulary[JavaLexer.LE] = '<=';
         javaToCSharpVocabulary[JavaLexer.GE] = '>=';
@@ -209,10 +252,6 @@ class Visitor extends JavaParserVisitor {
         javaToCSharpVocabulary[JavaLexer.COLONCOLON] = '::';
         javaToCSharpVocabulary[JavaLexer.AT] = '@';
         javaToCSharpVocabulary[JavaLexer.ELLIPSIS] = '...';
-        javaToCSharpVocabulary[JavaLexer.WS] = 'ws';
-        javaToCSharpVocabulary[JavaLexer.COMMENT] = 'comment';
-        javaToCSharpVocabulary[JavaLexer.LINE_COMMENT] = 'line_comment';
-        javaToCSharpVocabulary[JavaLexer.IDENTIFIER] = 'identifier';
     }
 
     translateFromJavaToCSharp(ctx) {

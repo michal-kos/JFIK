@@ -20,6 +20,10 @@ generate:
 	antlr4 -Dlanguage=JavaScript -visitor grammar/JavaParser.g4
 	mv grammar/*.interp grammar/*.tokens grammar/*.js ./src/parser
 
+java: 
+	javac -d ./ examples/HelloWorld.java
+	java -classpath . HelloWorld
+
 csharp: 
 	mcs -out:output.exe $(csharp_file_path)
 	mono output.exe

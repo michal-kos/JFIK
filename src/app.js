@@ -32,8 +32,6 @@ var tree = parser.compilationUnit();
 var output = 'using System;\n'
 output += new JavaLangVisitor().start(tree, tokens);
 
-console.log(code)
-console.log("\n\n")
 console.log(output)
 
 var outputFileName = "output" + ".cs"
