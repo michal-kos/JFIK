@@ -196,21 +196,9 @@ constantDeclarator
     : IDENTIFIER ('[' ']')* '=' variableInitializer
     ;
 
-// see matching of [] comment in methodDeclaratorRest
-// methodBody from Java8
 interfaceMethodDeclaration
-    : interfaceMethodModifier* (typeTypeOrVoid | typeParameters annotation* typeTypeOrVoid)
+    : (typeTypeOrVoid | typeParameters annotation* typeTypeOrVoid)
       IDENTIFIER formalParameters ('[' ']')* (THROWS qualifiedNameList)? methodBody
-    ;
-
-// Java8
-interfaceMethodModifier
-    : annotation
-    | PUBLIC
-    | ABSTRACT
-    | DEFAULT
-    | STATIC
-    | STRICTFP
     ;
 
 genericInterfaceMethodDeclaration
