@@ -70,7 +70,7 @@ class HelloWorld {
       int maxSoFar = numbers[0];
 
       // for each loop
-      for (int num : numbers) {
+      foreach (int num in numbers) {
          if (num > maxSoFar) {
             maxSoFar = num;
          }
