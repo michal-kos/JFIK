@@ -1,12 +1,28 @@
-class HelloWorld {
-   static final int K = 100;
+class For_Each      
+{ 
+    public static void main(String[] arg) 
+    { 
+        { 
+            int[] marks = { 125, 132, 95, 116, 110 }; 
+              
+            int highest_marks = maximum(marks); 
+            System.out.println("The highest score is " + highest_marks); 
+        } 
+    } 
+    public static int maximum(int[] numbers) 
+    {  
+        int maxSoFar = numbers[0]; 
+          
+        // for each loop 
+        for (int num : numbers){ 
+            if (num > maxSoFar) { 
+                maxSoFar = num; 
+            } 
+        }
 
-   public static void main(String[] args) { 
-      int x = 0; 
-      int y = 10;
-
-      if ((x > 8) && (y > 8)) {
-         
-      }
-   }
-}
+        for (int i=0; i<5; i++){
+           int a = i;
+        }
+    return maxSoFar; 
+    } 
+} 

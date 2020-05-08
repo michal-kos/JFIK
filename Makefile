@@ -10,7 +10,7 @@ csharp_file_path = ./output.cs
 gui:
 	cd grammar/ && $(antlr) Java*.g4 -o out_java
 	cd ${out_java_path} && $(javac) Java*.java
-	cd ${out_java_path} && $(grun) Java compilationUnit ../../examples/Animal.java -gui
+	cd ${out_java_path} && $(grun) Java compilationUnit ../../examples/HelloWorld.java -gui
 
 node: generate
 	node src/app.js examples/HelloWorld.java

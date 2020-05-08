@@ -92,7 +92,7 @@ class Visitor extends JavaParserVisitor {
             if (child === ctx.THROWS() || child === ctx.qualifiedNameList()) {
                 continue
             }
-            
+
             code += this.visit(ctx.getChild(i));
         }
 
@@ -126,7 +126,32 @@ class Visitor extends JavaParserVisitor {
 
         return code
     }
+
+    visitStatement(ctx) {
+        if (ctx.FOR() != null) {
+            return this.visitForStatement(ctx)
+        }
+
+        return this.visitChildren(ctx)
+    }
+
+    visitForStatement(ctx) {
+        if(ctx.forControl().enhancedForControl() != null) {
+            let code = '';
+            const foreachName = 'foreach'
+
+            ctx.FOR().symbol.text = foreachName
     
+            for (let i = 0; i < ctx.getChildCount(); i++) {
+                code += this.visit(ctx.getChild(i));
+            }
+    
+            return code
+        } 
+
+        return this.visitChildren(ctx)
+    }
+
     // TODO: 
     // -visitEnhancedForControl(ctx){} for (char ch : strChars)
     // -visitCatchClause(ctx){} catch (IOException | IllegalArgumentException ex) 
