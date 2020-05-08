@@ -165,54 +165,6 @@ class Visitor extends JavaParserVisitor {
         return code
     }
 
-    // TODO: 
-    // -visitEnhancedForControl(ctx){} for (char ch : strChars)
-    // -visitCatchClause(ctx){} catch (IOException | IllegalArgumentException ex) 
-    // -visitstatment -> try with resources
-    // -visitstatment -> assert assert n != 0;
-    // -inner class constructor
-    /*
-    static void Inner_class_constructor() {
-        // https://docs.oracle.com/javase/specs/jls/se9/html/jls-15.html#jls-15.9
-        Foo foo = new Foo();
-        Foo.Bar fooBar1 = foo.new Bar();
-        Foo.Bar fooBar2 = new Foo().new Bar();
-    }
-    */
-    // -local class 
-    /*
-    // Local class
-    class Foo {
-        void Bar() {
-            @WeakOuter
-            class Foobar {// Local class within a method
-            }
-        }
-    }
-    */
-    // - initialization
-    /*
-    class Foo {
-        static {
-            // Initialization
-        }
-    }
-
-    class Foo {
-        {
-            // Initialization
-        }
-    }
-    */
-    // System.out.println(Foo.class.getName() + ": constructor runtime");
-    // -int...
-    // -@Override
-    // -abstract class
-    // -enum
-    // -local interface
-    // annotations
-    // generic classes, methods, constructors
-
     // UTIL
     isArrayEmpty(array) {
         if (!Array.isArray(array) || !array.length) {
