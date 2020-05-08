@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "CodeLens (Launch) - HelloWorld",
+            "request": "launch",
+            "mainClass": "HelloWorld",
+            "projectName": "JFIK_98b62249"
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
@@ -12,7 +19,9 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/src/app.js",
-            "args": ["examples/HelloWorld.java"]
+            "args": [
+                "examples/HelloWorld.java"
+            ]
         }
     ]
 }

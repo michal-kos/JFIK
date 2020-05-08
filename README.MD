@@ -4,18 +4,28 @@
 ## Spis treści:
 - [Sposób użycia translatora](#użycie-translatora)
 - [Technologie wykorzystane do stworzenia projektu](#technologie-wykorzystane-do-stworzenia-projektu)
-- [Opis systemu typizacji dla języka Java](#opis-systemu-typizacji-dla-jezyka-java)
+- [Opis systemu typizacji dla języka Java](#opis-systemu-typizacji-dla-języka-java)
 - [Podstawowe cechy języka C#](#podstawowe-cechy-języka-C#)
-- [Uzasadnienie wyboru generatora parserów ANTLRv4](#uzasadnienie-wyboru-generatora-parserow-antlrv4)
-- [Napotkane problemy oraz sposób ich rozwiązania](#napotkane-problemy-oraz-sposob-ich-rozwizania)
-- [Specyfikacja gramatyki języka Java w notacji narzędzia ANTLRv4](#specyfikacja-gramatyki-jezyka-java-w-notacji-narzedzia-antlrv4)
+- [Uzasadnienie wyboru generatora parserów ANTLRv4](#uzasadnienie-wyboru-generatora-parserów-antlrv4)
+- [Napotkane problemy oraz sposób ich rozwiązania](#napotkane-problemy-oraz-sposób-ich-rozwiązania)
+- [Specyfikacja gramatyki języka Java w notacji narzędzia ANTLRv4](#specyfikacja-gramatyki-języka-java-w-notacji-narzędzia-antlrv4)
 - [Spis literatury](#spis-literatury)
 
 ## Użycie translatora
 
+Translator do działania wymaga JDK.
+Do przetłumaczenia pliku HelloWorld.java w folderze examples należy wykorzystać polecenie:
+
+`make` 
+
+Plik z przetłumaczonym kodem trafi do folderu ./output/. 
+
+W Makefile zdefiniowano także reguły do wyświetlenia drzewa pliku HelloWorld (komenda `make gui`) oraz do skompilowania i uruchomienia wynikowego pliku .cs (komenda `make csharp`)
+
 ## Technologie wykorzystane do stworzenia projektu
-Generatorem parserów jaki wybraliśmy do zaimplementowania translatora języka Java do C# jest narzędzie o nazwie [ANTLR w wersji 4](https://github.com/antlr/antlr4) wraz ze specjalnie przygotowaną [gramatyką](https://github.com/antlr/grammars-v4) języka Java. 
-Na ten moment do napisania translatora zamierzamy wykorzystać język JavaScript.
+Generatorem parserów jaki wybraliśmy do zaimplementowania translatora języka Java do C# jest narzędzie o nazwie [ANTLR w wersji 4](https://github.com/antlr/antlr4) wraz ze specjalnie przygotowaną [gramatykę](https://github.com/antlr/grammars-v4) języka Java. 
+
+Translator został napisany w języku JavaScript. Wybraliśmy ten język, ponieważ używamy go także do implementacji naszej pracy inżynierskiej, stąd chcieliśmy nabrać w nim więcej doświadczenia.
 
 ## Opis systemu typizacji dla języka Java
 
@@ -41,6 +51,25 @@ Kryteria jakimi był podyktowany wybór narzędzia ANTLRv4:
 3. Kolejnym argumentem wyboru tego generatora jest możliwość integracji z językiem JavaScript przez plugin npm. Przez projekty realizowane w poprzednich semestrach mamy z tym językiem większe doświadczenie.
 
 ## Napotkane problemy oraz sposób ich rozwiązania
+
+Problemy napotkane w trakcie implementacji:
+1. Pierwszy problem był wybór z jakiego wzorca skorzystać przy przejściu przez Abstract Syntax Tree, będącego wynikiem pracy parsera. Nie była to dla nas oczywista decyzja przez brak prosto dostępnych materiałów bezpośrednio dotyczących naszego problemu, dlatego pierwsze próby z wzorcem Listener były nie udane. Dopiero po migracji naszego kodu do wzorca Visitor implementacja stała się dużo prostsza i efektywniejsza.
+
+Wzorzec Listener:
+* Zalety:
+    - Każdy węzeł posiada metody onEnter oraz onExit, co umożliwia logiczne pogrupowanie operacji wykonywanych na początku i na końcu obsługi węzła. 
+* Wady:
+    - Z uwagi na automatyczne przejście drzewa AST listener ogranicza możliwość kontroli procesu przetwarzania odpowiednich węzłów. 
+
+Wzorzec Visitor:
+* Zalety:
+    - Tylko jedna metoda na każdy węzeł (metody zwracają wartość co omija konieczność użycia osobnych zmiennych do przechowywania przetłumaczonego kodu)
+    - Większa kontrola nad przechodzeniem drzewa i obsługą jego jego poszczególnych węzłów 
+* Wady:
+    - W przypadku pominięcia wizytowania dzieci danego węzła ich poddrzewa zostaną pominięte.
+
+
+2. Kolejnym problemem, który napotkaliśmy było przeniesienie białych znaków z pliku źródłowego do generowanego pliku wyjściowego. Problem udało się nam rozwiązać przenosząc białe znaki z kanału ukrytego do każdego z liścia drzewa odwiedzanego przez nasz Visitor (metoda `visitTerminal(ctx)` oraz `appendHiddenTokensToLeftOf(ctx)`).
 
 ## Specyfikacja gramatyki języka Java w notacji narzędzia ANTLRv4
 Specyfikacja gramatyki języka Java wspierana przez bibliotekę ANTLRv4 umieszczona została w lokalizacji *grammar/*. Reguły parsera i lexera znajdują się odpowiednio w plikach *JavaLexer.g4* oraz *JavaParser.g4* i pochodzą z oficjalnych [źródeł](https://github.com/antlr/grammars-v4/tree/master/java/java8) biblioteki ANTLRv4. Pliki zostały zmodyfikowane na potrzeby projektu, między innymi przez uproszczenie części gramatyki poprzez usunięcie nieobsługiwanych w transaltorze konstrukcji (jak na przykład wyrażenia lambda). 
