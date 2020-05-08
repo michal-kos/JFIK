@@ -1,12 +1,12 @@
 const JavaParserVisitor = require('./parser/JavaParserVisitor').JavaParserVisitor
 const JavaLexer = require('./parser/JavaLexer').JavaLexer;
+const JavaToCSharpVocabulary = require('./JavaToCSharpVocabulary')
 
 var javaToCSharpVocabulary;
 
 class Visitor extends JavaParserVisitor {
     start(ctx, tokenChannel) {
         this.tokenChannel = tokenChannel;
-        this.createTranslatorDictionary();
 
         return super.visitCompilationUnit(ctx);
     }
@@ -27,9 +27,9 @@ class Visitor extends JavaParserVisitor {
         if (ctx.symbol.type == JavaLexer.IDENTIFIER) {
             text = ctx.getText();
         } else {
-            text = this.translateFromJavaToCSharp(ctx);
+            text = JavaToCSharpVocabulary.translateFromJavaToCSharp(ctx);
 
-            if (text == null) {
+            if (text == null || ctx.symbol.type == 0) {
                 text = ctx.getText();
             }
         }
@@ -66,10 +66,10 @@ class Visitor extends JavaParserVisitor {
 
         if (ctx.IMPLEMENTS() != null) {
             if (ctx.EXTENDS() != null) {
-                code += javaToCSharpVocabulary[JavaLexer.COMMA]
+                code += JavaToCSharpVocabulary.javaToCSharpVocabulary[JavaLexer.COMMA]
                 code += this.visit(ctx.typeList())
             } else {
-                code += javaToCSharpVocabulary[JavaLexer.COLON]
+                code += JavaToCSharpVocabulary.javaToCSharpVocabulary[JavaLexer.COLON]
                 code += this.visit(ctx.typeList())
             }
         }
@@ -92,7 +92,7 @@ class Visitor extends JavaParserVisitor {
             if (child === ctx.THROWS() || child === ctx.qualifiedNameList()) {
                 continue
             }
-            
+
             code += this.visit(ctx.getChild(i));
         }
 
@@ -126,163 +126,43 @@ class Visitor extends JavaParserVisitor {
 
         return code
     }
-    
-    // TODO: 
-    // -visitEnhancedForControl(ctx){} for (char ch : strChars)
-    // -visitCatchClause(ctx){} catch (IOException | IllegalArgumentException ex) 
-    // -visitstatment -> try with resources
-    // -visitstatment -> assert assert n != 0;
-    // -inner class constructor
-    /*
-    static void Inner_class_constructor() {
-        // https://docs.oracle.com/javase/specs/jls/se9/html/jls-15.html#jls-15.9
-        Foo foo = new Foo();
-        Foo.Bar fooBar1 = foo.new Bar();
-        Foo.Bar fooBar2 = new Foo().new Bar();
+
+    visitStatement(ctx) {
+        if (ctx.FOR() != null) {
+            return this.visitForStatement(ctx)
+        }
+
+        return this.visitChildren(ctx)
     }
-    */
-    // -local class 
-    /*
-    // Local class
-    class Foo {
-        void Bar() {
-            @WeakOuter
-            class Foobar {// Local class within a method
+
+    visitForStatement(ctx) {
+        if (ctx.forControl().enhancedForControl() != null) {
+            let code = '';
+
+            ctx.FOR().symbol.text = 'foreach'
+            ctx.FOR().symbol.type = 0
+
+            for (let i = 0; i < ctx.getChildCount(); i++) {
+                code += this.visit(ctx.getChild(i));
             }
+
+            return code
         }
-    }
-    */
-    // - initialization
-    /*
-    class Foo {
-        static {
-            // Initialization
-        }
+
+        return this.visitChildren(ctx)
     }
 
-    class Foo {
-        {
-            // Initialization
+    visitEnhancedForControl(ctx) {
+        let code = '';
+
+        ctx.COLON().symbol.text = 'in'
+        ctx.COLON().symbol.type = 0
+
+        for (let i = 0; i < ctx.getChildCount(); i++) {
+            code += this.visit(ctx.getChild(i));
         }
-    }
-    */
-    // System.out.println(Foo.class.getName() + ": constructor runtime");
-    // -int...
-    // -@Override
-    // -abstract class
-    // -enum
-    // -local interface
-    // annotations
-    // generic classes, methods, constructors
 
-    // TODO - TRANSLATION separate file
-    createTranslatorDictionary() {
-        javaToCSharpVocabulary = {}
-        javaToCSharpVocabulary[JavaLexer.CHAR] = 'char'
-        javaToCSharpVocabulary[JavaLexer.FINAL] = 'readonly'
-        javaToCSharpVocabulary[JavaLexer.BOOLEAN] = 'bool'
-        javaToCSharpVocabulary[JavaLexer.CHAR] = 'char'
-        javaToCSharpVocabulary[JavaLexer.BYTE] = 'byte'
-        javaToCSharpVocabulary[JavaLexer.SHORT] = 'short'
-        javaToCSharpVocabulary[JavaLexer.INT] = 'int'
-        javaToCSharpVocabulary[JavaLexer.LONG] = 'long'
-        javaToCSharpVocabulary[JavaLexer.FLOAT] = 'float'
-        javaToCSharpVocabulary[JavaLexer.DOUBLE] = 'double'
-        javaToCSharpVocabulary[JavaLexer.EOF] = '';
-        javaToCSharpVocabulary[JavaLexer.ABSTRACT] = 'abstract';
-        javaToCSharpVocabulary[JavaLexer.ASSERT] = 'assert';
-        javaToCSharpVocabulary[JavaLexer.BREAK] = 'break';
-        javaToCSharpVocabulary[JavaLexer.CASE] = 'case';
-        javaToCSharpVocabulary[JavaLexer.CATCH] = 'catch';
-        javaToCSharpVocabulary[JavaLexer.CLASS] = 'class';
-        javaToCSharpVocabulary[JavaLexer.CONST] = 'const';
-        javaToCSharpVocabulary[JavaLexer.CONTINUE] = 'continue';
-        javaToCSharpVocabulary[JavaLexer.DEFAULT] = 'default';
-        javaToCSharpVocabulary[JavaLexer.DO] = 'do';
-        javaToCSharpVocabulary[JavaLexer.ELSE] = 'else';
-        javaToCSharpVocabulary[JavaLexer.ENUM] = 'enum';
-        javaToCSharpVocabulary[JavaLexer.EXTENDS] = ':'; // <----
-        javaToCSharpVocabulary[JavaLexer.FINALLY] = 'finally';
-        javaToCSharpVocabulary[JavaLexer.FOR] = 'for';
-        javaToCSharpVocabulary[JavaLexer.IF] = 'if';
-        javaToCSharpVocabulary[JavaLexer.INSTANCEOF] = 'instanceof';
-        javaToCSharpVocabulary[JavaLexer.IMPORT] = 'using';
-        javaToCSharpVocabulary[JavaLexer.INTERFACE] = 'interface';
-        javaToCSharpVocabulary[JavaLexer.LONG] = 'long';
-        javaToCSharpVocabulary[JavaLexer.NATIVE] = 'native';
-        javaToCSharpVocabulary[JavaLexer.NEW] = 'new';
-        javaToCSharpVocabulary[JavaLexer.PACKAGE] = 'package';
-        javaToCSharpVocabulary[JavaLexer.PRIVATE] = 'private';
-        javaToCSharpVocabulary[JavaLexer.PROTECTED] = 'protected';
-        javaToCSharpVocabulary[JavaLexer.PUBLIC] = 'public';
-        javaToCSharpVocabulary[JavaLexer.RETURN] = 'return';
-        javaToCSharpVocabulary[JavaLexer.SHORT] = 'short';
-        javaToCSharpVocabulary[JavaLexer.STATIC] = 'static';
-        javaToCSharpVocabulary[JavaLexer.STRICTFP] = 'strictfp';
-        javaToCSharpVocabulary[JavaLexer.SUPER] = 'super';
-        javaToCSharpVocabulary[JavaLexer.SWITCH] = 'switch';
-        javaToCSharpVocabulary[JavaLexer.SYNCHRONIZED] = 'synchronized';
-        javaToCSharpVocabulary[JavaLexer.THIS] = 'this';
-        javaToCSharpVocabulary[JavaLexer.THROW] = 'throw';
-        javaToCSharpVocabulary[JavaLexer.THROWS] = 'throws';
-        javaToCSharpVocabulary[JavaLexer.TRANSIENT] = 'transient';
-        javaToCSharpVocabulary[JavaLexer.TRY] = 'try';
-        javaToCSharpVocabulary[JavaLexer.VOID] = 'void';
-        javaToCSharpVocabulary[JavaLexer.VOLATILE] = 'volatile';
-        javaToCSharpVocabulary[JavaLexer.WHILE] = 'while';
-        javaToCSharpVocabulary[JavaLexer.NULL_LITERAL] = 'null';
-        javaToCSharpVocabulary[JavaLexer.LPAREN] = '(';
-        javaToCSharpVocabulary[JavaLexer.RPAREN] = ')';
-        javaToCSharpVocabulary[JavaLexer.LBRACE] = '{';
-        javaToCSharpVocabulary[JavaLexer.RBRACE] = '}';
-        javaToCSharpVocabulary[JavaLexer.LBRACK] = '[';
-        javaToCSharpVocabulary[JavaLexer.RBRACK] = ']';
-        javaToCSharpVocabulary[JavaLexer.SEMI] = ';';
-        javaToCSharpVocabulary[JavaLexer.COMMA] = ',';
-        javaToCSharpVocabulary[JavaLexer.DOT] = '.';
-        javaToCSharpVocabulary[JavaLexer.ASSIGN] = '=';
-        javaToCSharpVocabulary[JavaLexer.GT] = '>';
-        javaToCSharpVocabulary[JavaLexer.LT] = '<';
-        javaToCSharpVocabulary[JavaLexer.BANG] = '!';
-        javaToCSharpVocabulary[JavaLexer.TILDE] = '~';
-        javaToCSharpVocabulary[JavaLexer.QUESTION] = '?';
-        javaToCSharpVocabulary[JavaLexer.COLON] = ':';
-        javaToCSharpVocabulary[JavaLexer.EQUAL] = '==';
-        javaToCSharpVocabulary[JavaLexer.LE] = '<=';
-        javaToCSharpVocabulary[JavaLexer.GE] = '>=';
-        javaToCSharpVocabulary[JavaLexer.NOTEQUAL] = '!=';
-        javaToCSharpVocabulary[JavaLexer.AND] = '&&';
-        javaToCSharpVocabulary[JavaLexer.OR] = '||';
-        javaToCSharpVocabulary[JavaLexer.INC] = '++';
-        javaToCSharpVocabulary[JavaLexer.DEC] = '--';
-        javaToCSharpVocabulary[JavaLexer.ADD] = '+';
-        javaToCSharpVocabulary[JavaLexer.SUB] = '-';
-        javaToCSharpVocabulary[JavaLexer.MUL] = '*';
-        javaToCSharpVocabulary[JavaLexer.DIV] = '/';
-        javaToCSharpVocabulary[JavaLexer.BITAND] = '&';
-        javaToCSharpVocabulary[JavaLexer.BITOR] = '|';
-        javaToCSharpVocabulary[JavaLexer.CARET] = '^';
-        javaToCSharpVocabulary[JavaLexer.MOD] = '%';
-        javaToCSharpVocabulary[JavaLexer.ADD_ASSIGN] = '+=';
-        javaToCSharpVocabulary[JavaLexer.SUB_ASSIGN] = '-=';
-        javaToCSharpVocabulary[JavaLexer.MUL_ASSIGN] = '*=';
-        javaToCSharpVocabulary[JavaLexer.DIV_ASSIGN] = '/=';
-        javaToCSharpVocabulary[JavaLexer.AND_ASSIGN] = '&=';
-        javaToCSharpVocabulary[JavaLexer.OR_ASSIGN] = '|=';
-        javaToCSharpVocabulary[JavaLexer.XOR_ASSIGN] = '^=';
-        javaToCSharpVocabulary[JavaLexer.MOD_ASSIGN] = '%=';
-        javaToCSharpVocabulary[JavaLexer.LSHIFT_ASSIGN] = '<<=';
-        javaToCSharpVocabulary[JavaLexer.RSHIFT_ASSIGN] = '>>=';
-        javaToCSharpVocabulary[JavaLexer.URSHIFT_ASSIGN] = '>>>=';
-        javaToCSharpVocabulary[JavaLexer.ARROW] = '->';
-        javaToCSharpVocabulary[JavaLexer.COLONCOLON] = '::';
-        javaToCSharpVocabulary[JavaLexer.AT] = '@';
-        javaToCSharpVocabulary[JavaLexer.ELLIPSIS] = '...';
-    }
-
-    translateFromJavaToCSharp(ctx) {
-        let tokenIndex = ctx.symbol.type
-        return javaToCSharpVocabulary[tokenIndex]
+        return code
     }
 
     // UTIL
