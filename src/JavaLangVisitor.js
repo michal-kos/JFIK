@@ -29,7 +29,7 @@ class Visitor extends JavaParserVisitor {
         } else {
             text = JavaToCSharpVocabulary.translateFromJavaToCSharp(ctx);
 
-            if (text == null) {
+            if (text == null || ctx.symbol.type == 0) {
                 text = ctx.getText();
             }
         }
@@ -92,7 +92,7 @@ class Visitor extends JavaParserVisitor {
             if (child === ctx.THROWS() || child === ctx.qualifiedNameList()) {
                 continue
             }
-            
+
             code += this.visit(ctx.getChild(i));
         }
 
@@ -126,54 +126,44 @@ class Visitor extends JavaParserVisitor {
 
         return code
     }
-    
-    // TODO: 
-    // -visitEnhancedForControl(ctx){} for (char ch : strChars)
-    // -visitCatchClause(ctx){} catch (IOException | IllegalArgumentException ex) 
-    // -visitstatment -> try with resources
-    // -visitstatment -> assert assert n != 0;
-    // -inner class constructor
-    /*
-    static void Inner_class_constructor() {
-        // https://docs.oracle.com/javase/specs/jls/se9/html/jls-15.html#jls-15.9
-        Foo foo = new Foo();
-        Foo.Bar fooBar1 = foo.new Bar();
-        Foo.Bar fooBar2 = new Foo().new Bar();
-    }
-    */
-    // -local class 
-    /*
-    // Local class
-    class Foo {
-        void Bar() {
-            @WeakOuter
-            class Foobar {// Local class within a method
-            }
+
+    visitStatement(ctx) {
+        if (ctx.FOR() != null) {
+            return this.visitForStatement(ctx)
         }
-    }
-    */
-    // - initialization
-    /*
-    class Foo {
-        static {
-            // Initialization
-        }
+
+        return this.visitChildren(ctx)
     }
 
-    class Foo {
-        {
-            // Initialization
+    visitForStatement(ctx) {
+        if (ctx.forControl().enhancedForControl() != null) {
+            let code = '';
+
+            ctx.FOR().symbol.text = 'foreach'
+            ctx.FOR().symbol.type = 0
+
+            for (let i = 0; i < ctx.getChildCount(); i++) {
+                code += this.visit(ctx.getChild(i));
+            }
+
+            return code
         }
+
+        return this.visitChildren(ctx)
     }
-    */
-    // System.out.println(Foo.class.getName() + ": constructor runtime");
-    // -int...
-    // -@Override
-    // -abstract class
-    // -enum
-    // -local interface
-    // annotations
-    // generic classes, methods, constructors
+
+    visitEnhancedForControl(ctx) {
+        let code = '';
+
+        ctx.COLON().symbol.text = 'in'
+        ctx.COLON().symbol.type = 0
+
+        for (let i = 0; i < ctx.getChildCount(); i++) {
+            code += this.visit(ctx.getChild(i));
+        }
+
+        return code
+    }
 
     // UTIL
     isArrayEmpty(array) {

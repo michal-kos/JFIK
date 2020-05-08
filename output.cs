@@ -1,58 +1,29 @@
 using System;
-interface Animal {
-    void AnimalSound();
+class For_Each      
+{ 
+    public static void Main(String[] arg) 
+    { 
+        { 
+            int[] marks = { 125, 132, 95, 116, 110 }; 
+              
+            int highest_marks = Maximum(marks); 
+            //System.out.println("The highest score is " + highest_marks); 
+        } 
+    } 
+    public static int Maximum(int[] numbers) 
+    {  
+        int maxSoFar = numbers[0]; 
+          
+        // for each loop 
+        foreach (int num in numbers){ 
+            if (num > maxSoFar) { 
+                maxSoFar = num; 
+            } 
+        }
 
-    void Run();
-}
-
-public class Dog: Animal {
-    String breed;
-    int age;
-    String color;
-
-    void Animal.AnimalSound() {
-        Barking();
-    }
-
-    void Animal.Run() {
-
-    }
-
-    void Barking() {
-    }
-
-    void Hungry() {
-    }
-
-    void Sleeping() {
-    }
-}
-
-public class Puppy : Dog {
-    int puppyAge;
-    String name;
-
-    public Puppy(String name) {
-        this.name = name;
-    }
-
-    public void SetAge(int age) {
-        puppyAge = age;
-    }
-
-    public int GetAge() {
-        return puppyAge;
-    }
-}
-
-class AnimalTest {
-    public static void Main(String[] args) {
-        Animal dog = new Dog();
-        Dog puppy = new Puppy("Kajtek");
-
-        puppy.AnimalSound();
-
-        Puppy anotherPuppy = new Puppy("asd");
-        anotherPuppy.SetAge(10);
-    }
-}
+        for (int i=0; i<5; i++){
+           int a = i;
+        }
+    return maxSoFar; 
+    } 
+} 
