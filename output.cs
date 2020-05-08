@@ -7,7 +7,7 @@ class For_Each
             int[] marks = { 125, 132, 95, 116, 110 }; 
               
             int highest_marks = Maximum(marks); 
-            System.out.Println("The highest score is " + highest_marks); 
+            //System.out.println("The highest score is " + highest_marks); 
         } 
     } 
     public static int Maximum(int[] numbers) 
@@ -15,7 +15,7 @@ class For_Each
         int maxSoFar = numbers[0]; 
           
         // for each loop 
-        for (int num : numbers){ 
+        foreach (int num in numbers){ 
             if (num > maxSoFar) { 
                 maxSoFar = num; 
             } 

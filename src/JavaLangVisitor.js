@@ -29,7 +29,7 @@ class Visitor extends JavaParserVisitor {
         } else {
             text = JavaToCSharpVocabulary.translateFromJavaToCSharp(ctx);
 
-            if (text == null) {
+            if (text == null || ctx.symbol.type == 0) {
                 text = ctx.getText();
             }
         }
@@ -136,20 +136,33 @@ class Visitor extends JavaParserVisitor {
     }
 
     visitForStatement(ctx) {
-        if(ctx.forControl().enhancedForControl() != null) {
+        if (ctx.forControl().enhancedForControl() != null) {
             let code = '';
-            const foreachName = 'foreach'
 
-            ctx.FOR().symbol.text = foreachName
-    
+            ctx.FOR().symbol.text = 'foreach'
+            ctx.FOR().symbol.type = 0
+
             for (let i = 0; i < ctx.getChildCount(); i++) {
                 code += this.visit(ctx.getChild(i));
             }
-    
+
             return code
-        } 
+        }
 
         return this.visitChildren(ctx)
+    }
+
+    visitEnhancedForControl(ctx) {
+        let code = '';
+
+        ctx.COLON().symbol.text = 'in'
+        ctx.COLON().symbol.type = 0
+
+        for (let i = 0; i < ctx.getChildCount(); i++) {
+            code += this.visit(ctx.getChild(i));
+        }
+
+        return code
     }
 
     // TODO: 
