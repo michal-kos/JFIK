@@ -33,7 +33,7 @@ output += new JavaLangVisitor().start(tree, tokens);
 
 console.log(output)
 
-var outputFileName = "output" + ".cs"
+var outputFileName = "./output/program.cs"
 fs.writeFile(outputFileName, output, function (err) {
     if (err) throw err;
     console.log('File is created successfully.');
