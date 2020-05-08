@@ -14,7 +14,7 @@
 ## Użycie translatora
 
 ## Technologie wykorzystane do stworzenia projektu
-Generatorem parserów jaki wybraliśmy do zaimplementowania translatora języka Java do C# jest narzędzie o nazwie [ANTLR w wersji 4](https://github.com/antlr/antlr4) wraz ze specjalnie przygotowaną [gramatykę](https://github.com/antlr/grammars-v4) języka Java. 
+Generatorem parserów jaki wybraliśmy do zaimplementowania translatora języka Java do C# jest narzędzie o nazwie [ANTLR w wersji 4](https://github.com/antlr/antlr4) wraz ze specjalnie przygotowaną [gramatyką](https://github.com/antlr/grammars-v4) języka Java. 
 Na ten moment do napisania translatora zamierzamy wykorzystać język JavaScript.
 
 ## Opis systemu typizacji dla języka Java
@@ -43,5 +43,73 @@ Kryteria jakimi był podyktowany wybór narzędzia ANTLRv4:
 ## Napotkane problemy oraz sposób ich rozwiązania
 
 ## Specyfikacja gramatyki języka Java w notacji narzędzia ANTLRv4
+Specyfikacja gramatyki języka Java wspierana przez bibliotekę ANTLRv4 umieszczona została w lokalizacji *grammar/*. Reguły parsera i lexera znajdują się odpowiednio w plikach *JavaLexer.g4* oraz *JavaParser.g4* i pochodzą z oficjalnych [źródeł](https://github.com/antlr/grammars-v4/tree/master/java/java8) biblioteki ANTLRv4. Pliki zostały zmodyfikowane na potrzeby projektu, między innymi przez uproszczenie części gramatyki poprzez usunięcie nieobsługiwanych w transaltorze konstrukcji (jak na przykład wyrażenia lambda). 
+
+Przykładowy fragment reguł parsera przedstawiający niektóre elementy mogące znajdować się w *bloku*:
+
+```
+block
+    : '{' blockStatement* '}'
+    ;
+
+blockStatement
+    : localVariableDeclaration ';'
+    | statement
+    | localTypeDeclaration
+    ;
+
+localVariableDeclaration
+    : variableModifier* typeType variableDeclarators
+    ;
+
+localTypeDeclaration
+    : classOrInterfaceModifier*
+      (classDeclaration | interfaceDeclaration)
+    | ';'
+    ;
+
+statement
+    : blockLabel=block
+    | ASSERT expression (':' expression)? ';'
+    | IF parExpression statement (ELSE statement)?
+    | FOR '(' forControl ')' statement
+    | WHILE parExpression statement
+    | DO statement WHILE parExpression ';'
+    | TRY block (catchClause+ finallyBlock? | finallyBlock)
+    | TRY resourceSpecification block catchClause* finallyBlock?
+    | SWITCH parExpression '{' switchBlockStatementGroup* switchLabel* '}'
+    | SYNCHRONIZED parExpression block
+    | RETURN expression? ';'
+    | THROW expression ';'
+    | BREAK IDENTIFIER? ';'
+    | CONTINUE IDENTIFIER? ';'
+    | SEMI
+    | statementExpression=expression ';'
+    | identifierLabel=IDENTIFIER ':' statement
+    ;
+```
+
+Tak przygotowana gramatyka umożliwiła generowanie drzew składniowych (*parse tree*) na podstawie wejściowego pliku w języku Java. Przykładowe dwa drzewa przedstawiające konstrukcję standardowej pętli ```for``` oraz typu ```foreach```:
+
+```java
+class For_Each      
+{ 
+    public static void main(String[] arg) 
+    { 
+        for (int num : numbers){ 
+        }
+
+        for (int i=0; i<5; i++){
+        }
+
+    } 
+} 
+```
+![](/examples/example_tree.png)
 
 ## Spis literatury
+- [Dokumentacja narzędzia ANTLR](https://github.com/antlr/antlr4/blob/master/doc/index.md)
+- [Dokumentacja języka C#](https://docs.microsoft.com/en-us/dotnet/csharp/)
+- [Dokumentacja języka Java](https://docs.oracle.com/javase/7/docs/api/)
+- [Porównanie języków C# i Java](https://en.wikipedia.org/wiki/Comparison_of_C_Sharp_and_Java)
+- Kernighan B. W., Ritchie D. M., "Język ANSI C.", Wydawnictwa Naukowo-Techniczne
