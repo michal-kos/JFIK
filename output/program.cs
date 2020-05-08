@@ -1,8 +1,9 @@
+using System;
 
 interface Animal {
-   void animalSound();
+   void AnimalSound();
 
-   void run();
+   void Run();
 }
 
 public class Dog {
@@ -10,17 +11,17 @@ public class Dog {
    int age;
    String color;
 
-   public void barking() {
+   public void Barking() {
    }
 
-   public void hungry() {
+   public void Hungry() {
    }
 
-   public void sleeping() {
+   public void Sleeping() {
    }
 }
 
-public class Puppy extends Dog {
+public class Puppy : Dog {
    int puppyAge;
    String name;
 
@@ -28,44 +29,44 @@ public class Puppy extends Dog {
       this.name = name;
    }
 
-   static private int getIndex() {
+   static private int GetIndex() {
       return 1;
    }
 
-   private void digest() {
+   private void Digest() {
 
    }
 
-   public void setAge(int age) {
+   public void SetAge(int age) {
       puppyAge = age;
    }
 
-   public int getAge() {
+   public int GetAge() {
       return puppyAge;
    }
 }
 
 class HelloWorld {
-   static final int K = 100;
+   static readonly int K = 100;
 
-   public static void main(String[] args) {
+   public static void Main(String[] args) {
       int[] array = { 1, 2, 3, 5, 6, 7, 8, 9 };
 
-      int index = runBinarySearchRecursively(array, 5, 0, 8);
+      int index = RunBinarySearchRecursively(array, 5, 0, 8);
 
       Dog puppy = new Puppy("Kajtek");
 
-      puppy.barking();
+      puppy.Barking();
 
       Puppy anotherPuppy = new Puppy("asd");
-      anotherPuppy.setAge(10);
+      anotherPuppy.SetAge(10);
 
       int[] marks = { 125, 132, 95, 116, 110 };
 
-      int highest_marks = maximum(marks);
+      int highest_marks = Maximum(marks);
    }
 
-   public static int maximum(int[] numbers) {
+   public static int Maximum(int[] numbers) {
       int maxSoFar = numbers[0];
 
       // for each loop
@@ -82,7 +83,7 @@ class HelloWorld {
       return maxSoFar;
    }
 
-   public static int runBinarySearchRecursively(int[] sortedArray, int key, int low, int high) {
+   public static int RunBinarySearchRecursively(int[] sortedArray, int key, int low, int high) {
       int middle = (low + high) / 2;
 
       if (high < low) {
@@ -92,13 +93,13 @@ class HelloWorld {
       if (key == sortedArray[middle]) {
          return middle;
       } else if (key < sortedArray[middle]) {
-         return runBinarySearchRecursively(sortedArray, key, low, middle - 1);
+         return RunBinarySearchRecursively(sortedArray, key, low, middle - 1);
       } else {
-         return runBinarySearchRecursively(sortedArray, key, middle + 1, high);
+         return RunBinarySearchRecursively(sortedArray, key, middle + 1, high);
       }
    }
 
-   public static void exceptions() throws IOException, ExportException {
+   public static void Exceptions() {
       
    }
 }
