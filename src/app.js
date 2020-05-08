@@ -1,7 +1,6 @@
 const antlr = require('antlr4')
 const JavaLexer = require('./parser/JavaLexer').JavaLexer
 const JavaParser = require('./parser/JavaParser').JavaParser
-const JavaLangListener = require('./JavaLangListener').JavaLangListener
 const JavaLangVisitor = require('./JavaLangVisitor')
 
 const fs = require('fs')

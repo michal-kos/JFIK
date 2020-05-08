@@ -1,9 +1,7 @@
 const JavaParserVisitor = require('./parser/JavaParserVisitor').JavaParserVisitor
 const JavaLexer = require('./parser/JavaLexer').JavaLexer;
-// const JavaToCSharpVocabulary = require('./JavaToCSharpVocabulary')
 
 var javaToCSharpVocabulary;
-// var tokenChannel;
 
 class Visitor extends JavaParserVisitor {
     start(ctx, tokenChannel) {
@@ -95,6 +93,34 @@ class Visitor extends JavaParserVisitor {
                 continue
             }
             
+            code += this.visit(ctx.getChild(i));
+        }
+
+        return code
+    }
+
+    visitMethodCall(ctx) {
+        let code = '';
+
+        const methodName = ctx.IDENTIFIER().getText()
+        const methodNameCapitalized = methodName.charAt(0).toUpperCase() + methodName.slice(1)
+        ctx.IDENTIFIER().symbol.text = methodNameCapitalized
+
+        for (let i = 0; i < ctx.getChildCount(); i++) {
+            code += this.visit(ctx.getChild(i));
+        }
+
+        return code
+    }
+
+    visitInterfaceMethodDeclaration(ctx) {
+        let code = '';
+
+        const methodName = ctx.IDENTIFIER().getText()
+        const methodNameCapitalized = methodName.charAt(0).toUpperCase() + methodName.slice(1)
+        ctx.IDENTIFIER().symbol.text = methodNameCapitalized
+
+        for (let i = 0; i < ctx.getChildCount(); i++) {
             code += this.visit(ctx.getChild(i));
         }
 
