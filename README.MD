@@ -13,14 +13,28 @@
 
 ## Użycie translatora
 
-Translator do działania wymaga JDK.
-Do przetłumaczenia pliku HelloWorld.java w folderze examples należy wykorzystać polecenie:
+### Wymagane zależności:
+- Java Developement Kit.
+- ANTLR w wersji 4.7.2 [w przypadku noweszej wersji należy zedytować zmienne w pliku Makefile]
+- nodejs wraz z zależnościami w pliku *package.json* (`npm install`)
 
-`make` 
+### Wygenerowanie drzewa składniowego (*parse tree*) 
+Plik wejściowy: /examples/HelloWorld.java (możliwa zmiana w pliku Makefile):
+```
+sudo make gui
+```
 
-Plik z przetłumaczonym kodem trafi do folderu ./output/. 
+### Uruchomenie translatora - wygenerowanie przetłumaczonego pliku w języku C# 
+Plik wejściowy: /examples/HelloWorld.java - możliwa zmiana w pliku Makefile:
+```
+sudo make
+```
+Plik wynikowy z przetłumaczonym kodem trafi do folderu *output/*
 
-W Makefile zdefiniowano także reguły do wyświetlenia drzewa pliku HelloWorld (komenda `make gui`) oraz do skompilowania i uruchomienia wynikowego pliku .cs (komenda `make csharp`)
+### Kompilacja pliku C#:
+```
+sudo make csharp
+```
 
 ## Technologie wykorzystane do stworzenia projektu
 Generatorem parserów jaki wybraliśmy do zaimplementowania translatora języka Java do C# jest narzędzie o nazwie [ANTLR w wersji 4](https://github.com/antlr/antlr4) wraz ze specjalnie przygotowaną [gramatykę](https://github.com/antlr/grammars-v4) języka Java. 
