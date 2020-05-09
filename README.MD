@@ -14,8 +14,8 @@
 ## Użycie translatora
 
 ### Wymagane zależności:
-- Java Developement Kit.
-- ANTLR w wersji 4.7.2 [w przypadku noweszej wersji należy zedytować zmienne w pliku Makefile]
+- Java Developement Kit,
+- ANTLR w wersji 4.7.2 [w przypadku noweszej wersji należy zedytować zmienne w pliku Makefile],
 - nodejs wraz z zależnościami w pliku *package.json* (`npm install`)
 
 ### Wygenerowanie drzewa składniowego (*parse tree*) 
