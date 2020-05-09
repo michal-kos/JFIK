@@ -19,7 +19,7 @@
 - nodejs wraz z zależnościami w pliku *package.json* (`npm install`)
 
 ### Wygenerowanie drzewa składniowego (*parse tree*) 
-Plik wejściowy: /examples/HelloWorld.java (możliwa zmiana w pliku Makefile):
+Plik wejściowy: /examples/HelloWorld.java - możliwa zmiana w pliku Makefile:
 ```
 sudo make gui
 ```
